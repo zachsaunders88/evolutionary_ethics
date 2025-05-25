@@ -1,9 +1,0 @@
-knowledge wallet_ethics:
-
-bc return_wallet:
-    if wallet.has_id("yes"):
-        conclude action.return_wallet(True)
-
-bc keep_wallet:
-    if wallet.has_id("no"):
-        conclude action.keep_wallet(True)

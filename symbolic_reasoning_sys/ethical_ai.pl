@@ -1,0 +1,47 @@
+% ethics_rules.pl
+
+% Utilitarian rule: maximize happiness (e.g., returning a wallet to its owner is good)
+utilitarian_rule(scenario(dropped_wallet, OwnerNearby, ContentsValuable), return_wallet) :-
+    OwnerNearby == true,
+    ContentsValuable == true.
+
+% Deontological rule: follow moral duties (e.g., do not steal)
+deontological_rule(scenario(dropped_wallet, _, ContentsValuable), do_not_take_wallet) :-
+    ContentsValuable == true.
+
+
+% scenario_facts.pl
+
+% Example scenario
+scenario(dropped_wallet, scenario(dropped_wallet, true, true)).
+
+
+% weights.pl
+
+% Ethical weights: format is weight(rule_name, value)
+weight(utilitarian, 0.6).
+weight(deontological, 0.4).
+
+
+% utils.pl
+
+justify(RuleName, Action, Justification) :-
+    format(atom(Justification), 'Action ~w justified by ~w ethics.', [Action, RuleName]).
+
+
+% decision_engine.pl
+
+make_decision(ScenarioName, Action, Justification, Score) :-
+    scenario(ScenarioName, Scenario),
+    findall((W,A), (
+        (utilitarian_rule(Scenario, A), weight(utilitarian, W));
+        (deontological_rule(Scenario, A), weight(deontological, W))
+    ), Decisions),
+    sort(Decisions, UniqueDecisions),
+    maplist(arg(1), UniqueDecisions, Weights),
+    maplist(arg(2), UniqueDecisions, Actions),
+    sum_list(Weights, Score),
+    nth0(0, Actions, Action),
+    nth0(0, UniqueDecisions, (W,_)),
+    (W > 0.5 -> Rule = utilitarian ; Rule = deontological),
+    justify(Rule, Action, Justification).

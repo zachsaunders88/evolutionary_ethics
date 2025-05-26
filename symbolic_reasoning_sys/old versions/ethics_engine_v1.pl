@@ -1,0 +1,65 @@
+% ETHICS ENGINE V1
+
+% Utilitarian rules: aim to maximize collective benefit and well-being
+utilitarian_rule(scenario(dropped_wallet, true, true, many_people_around), return_wallet) :- !.
+utilitarian_rule(scenario(dropped_wallet, true, true, isolated_area), return_wallet) :- !.
+utilitarian_rule(scenario(dropped_wallet, false, true, many_people_around), hand_to_authority) :- !.
+utilitarian_rule(scenario(dropped_wallet, false, true, isolated_area), leave_wallet) :- !.
+
+% Deontological rules: follow moral duties regardless of consequences
+deontological_rule(scenario(dropped_wallet, _, true, _), do_not_take_wallet).
+% act_transparency is a normative contraint, not a selectable action
+
+% Self-interest rules: model personal gain-oriented behavior
+self_interest_rule(scenario(dropped_wallet, false, true, isolated_area), take_wallet).
+
+
+% scenario_facts.pl
+
+% Full 8 combinations of (OwnerNearby, ContentsValuable, Environment)
+scenario(dropped_wallet_1, scenario(dropped_wallet, true, true, many_people_around)).
+scenario(dropped_wallet_2, scenario(dropped_wallet, true, true, isolated_area)).
+scenario(dropped_wallet_3, scenario(dropped_wallet, true, false, many_people_around)).
+scenario(dropped_wallet_4, scenario(dropped_wallet, true, false, isolated_area)).
+scenario(dropped_wallet_5, scenario(dropped_wallet, false, true, many_people_around)).
+scenario(dropped_wallet_6, scenario(dropped_wallet, false, true, isolated_area)).
+scenario(dropped_wallet_7, scenario(dropped_wallet, false, false, many_people_around)).
+scenario(dropped_wallet_8, scenario(dropped_wallet, false, false, isolated_area)).
+
+
+% weights.pl
+
+% Ethical weights: format is weight(rule_name, value)
+weight(utilitarian, 0.6).
+weight(deontological, 0.3).
+weight(self_interest, 0.1).
+
+
+% utils.pl
+
+justify(RuleName, Action, Justification) :-
+    format(atom(Justification), 'Action ~w justified by ~w ethics.', [Action, RuleName]).
+
+
+% decision_engine.pl
+
+
+make_decision(ScenarioName, Action, Justification, Score) :-
+    scenario(ScenarioName, Scenario),
+    findall((W,A), (
+        (utilitarian_rule(Scenario, A), weight(utilitarian, W));
+        (deontological_rule(Scenario, A), weight(deontological, W));
+        (self_interest_rule(Scenario, A), weight(self_interest, W))
+    ), Decisions),
+    sort(Decisions, UniqueDecisions),
+    maplist(arg(1), UniqueDecisions, Weights),
+    maplist(arg(2), UniqueDecisions, Actions),
+    sum_list(Weights, Score),
+    nth0(0, Actions, Action),
+    nth0(0, UniqueDecisions, (W,_)),
+    max_list([0.6, 0.3, 0.1], Max1),
+    max_list([0.3, 0.1], Max2),
+    (W >= Max1 -> Rule = utilitarian
+    ; W >= Max2 -> Rule = deontological
+    ; Rule = self_interest),
+    justify(Rule, Action, Justification).

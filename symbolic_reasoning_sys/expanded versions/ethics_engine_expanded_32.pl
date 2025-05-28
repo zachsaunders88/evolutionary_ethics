@@ -77,6 +77,9 @@ self_interest_rule(scenario(dropped_wallet, true, true, isolated_area, _), retur
 
 % == SCENARIO MODULE ==
 
+% SCENARIO FORMAT (scenario(name, owner_nearby, content_valuable,
+% environment, legal_context))
+
 scenario(dropped_wallet_1, scenario(dropped_wallet, true, true, many_people_around, none)).
 scenario(dropped_wallet_2, scenario(dropped_wallet, true, true, many_people_around, cctv_visible)).
 scenario(dropped_wallet_3, scenario(dropped_wallet, true, true, many_people_around, law_posted)).

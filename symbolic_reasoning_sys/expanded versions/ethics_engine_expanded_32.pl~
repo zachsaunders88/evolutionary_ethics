@@ -56,8 +56,7 @@ self_interest_rule(scenario(dropped_wallet, false, true, isolated_area, none), t
 self_interest_rule(scenario(dropped_wallet, false, true, isolated_area, unclear), take_wallet).
 % Cameras deter selfish action; loss outweighs gain
 self_interest_rule(scenario(dropped_wallet, false, true, isolated_area, cctv_visible), leave_wallet).
-% Law threat dissuades taking; self-interest defers
-to safety
+% Law threat dissuades taking; self-interest defers to safety
 self_interest_rule(scenario(dropped_wallet, false, true, isolated_area, law_posted), leave_wallet).
 % Non-valuable items still yield trivial gains if unobserved
 self_interest_rule(scenario(dropped_wallet, false, false, isolated_area, none), take_wallet).
@@ -151,21 +150,21 @@ unmatched_scenario(Name) :-
     scenario(Name, S),
     \+ (utilitarian_rule(S,_); deontological_rule(S,_); self_interest_rule(S,_)).
 
+
 % == Decision MODULE ==
 
 make_decision(ScenarioName, Action, Justification, Score) :-
-    scenario(ScenarioName, Scenario),
-    findall((W,A), (
-        (utilitarian_rule(Scenario, A), weight(utilitarian, W));
-        (deontological_rule(Scenario, A), weight(deontological, W), A \= act_transparently);
-        (self_interest_rule(Scenario, A), weight(self_interest, W))
-    ), Decisions),
-    (Decisions == [] -> (
-        Action = no_action,
-        Justification = 'No ethical rule applied.',
+    ( ethical_gap(ScenarioName) ->
+        Action = undecided,
+        Justification = 'No ethical rule matched. Scenario flagged for evolutionary probing.',
         Score = 0.0
-    )
-    ; (
+    ;
+        scenario(ScenarioName, Scenario),
+        findall((W,A), (
+            (utilitarian_rule(Scenario, A), weight(utilitarian, W));
+            (deontological_rule(Scenario, A), weight(deontological, W), A \= act_transparently);
+            (self_interest_rule(Scenario, A), weight(self_interest, W))
+        ), Decisions),
         sort(Decisions, UniqueDecisions),
         maplist(arg(1), UniqueDecisions, Weights),
         maplist(arg(2), UniqueDecisions, _),
@@ -174,7 +173,6 @@ make_decision(ScenarioName, Action, Justification, Score) :-
         (Count > 0 -> Score is RawScore / Count ; Score = 0.0),
         max_member((W, Action), UniqueDecisions),
         scenario(ScenarioName, Scenario),
-        % Determine which system(s) produced this Action, then match max among them
         findall((Rw, Rs), (
             (utilitarian_rule(Scenario, A), A == Action, weight(utilitarian, Rw), Rs = utilitarian);
             (deontological_rule(Scenario, A), A == Action, weight(deontological, Rw), Rs = deontological);
@@ -182,4 +180,4 @@ make_decision(ScenarioName, Action, Justification, Score) :-
         ), RuleWeightPairs),
         max_member((_, Rule), RuleWeightPairs),
         justify(Rule, Action, Justification)
-    )).
+    ).

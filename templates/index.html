@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Scene list{% endblock %}
+
+{% block content %}
+
+  <section class="scenarios-section">
+    <div class="scenarios-container">
+
+      <aside class="sidebar">
+        <div class="section-title">Regarding scene Settings</div>
+        <p>Here are 32 scenarios of "picking up wallets" defined in the system. Each scene consists of the following dimensions:</p>
+        <ul>
+          <li>The owner is nearby/not nearby</li>
+          <li>The item is valuable/ordinary</li>
+          <li>Environment (Dense vs. Remote)</li>
+          <li>Legal background (With/without repayment obligation)</li>
+        </ul>
+      </aside>
+
+      <article class="main">
+        <div class="section-title">Scenarios</div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Code</th><th>Owner?</th><th>Valuable?</th><th>Environment</th><th>Legal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for scene in scenes %}
+            <tr>
+              <td>{{ scene.code }}</td>
+              <td>{{ 'Nearby' if scene.owner_nearby else 'Not nearby' }}</td>
+              <td>{{ 'Valuable' if scene.valuable else 'Not valuable' }}</td>
+              <td>{{ scene.environment.replace('_',' ')|title }}</td>
+              <td>{{ scene.legal_context.replace('_',' ')|title }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </article>
+    </div>
+  </section>
+
+
+  <div class="ga-button-container">
+    <form action="{{ url_for('run_ga_route') }}" method="post">
+      <button type="submit" class="btn">Run the genetic algorithm</button>
+    </form>
+  </div>
+
+  {% if run_id %}
+
+  <section class="results-section">
+    <div class="section-title">The evolution process of genetic algorithms</div>
+    <div class="charts">
+      <div class="chart">
+        <div class="chart-title">Fitness trend(Accuracy)</div>
+        <img src="{{ url_for('plot_fitness_route', run_id=run_id) }}" alt="Fitness Trend">
+      </div>
+      <div class="chart">
+        <div class="chart-title">Weight evolution trend</div>
+        <img src="{{ url_for('plot_weight_trend_route', run_id=run_id) }}" alt="Weight Evolution">
+      </div>
+    </div>
+
+    <div class="section-title">Optimal individual weight distribution(The optimal individual is the one whose event handling decisions are closest to those of humans after evolutionary competition)</div>
+    <div class="chart centered">
+      <img src="{{ url_for('plot_weights_route', run_id=run_id) }}" alt="Weights Pie">
+    </div>
+
+    <div class="section-title">Details of the optimal individual decision</div>
+    <div class="decision-list">
+      {% for d in decisions %}
+      <div class="decision-item">
+        <p><span class="label">Scenario:</span> <span class="value">{{ d.scenario }}</span></p>
+        <p><span class="label">Action:</span> <span class="value">{{ d.action }}</span></p>
+        <p><span class="label">Justification:</span> <span class="value">{{ d.justification }}</span></p>
+        <p><span class="label">Score:</span> <span class="value">{{ "%.3f"|format(d.score) }}</span></p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+{% endblock %}

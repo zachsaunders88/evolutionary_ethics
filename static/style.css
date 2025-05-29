@@ -1,0 +1,234 @@
+/* —— Theme Colors —— */
+:root {
+  --color-bg:      #f5f8fa;
+  --color-card:    #ffffff;
+  --color-primary: #4A90E2;
+  --color-accent:  #50E3C2;
+  --color-text:    #333333;
+  --color-border:  #e1e4e8;
+  --spacing:       1rem;
+  --radius:        0.5rem;
+}
+
+/* —— Global Reset & Typography —— */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  padding: calc(var(--spacing) * 2);
+}
+h1, h2, h3, h4 {
+  margin-bottom: calc(var(--spacing) * 0.5);
+}
+p, ul {
+  margin-bottom: var(--spacing);
+}
+
+/* —— Container & Layout —— */
+.container,.scenarios-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--spacing);
+}
+
+.site-header, .site-footer {
+  background: var(--color-card);
+  border-bottom: 1px solid var(--color-border);
+}
+.site-header .container, .site-footer .container {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing) 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  border-bottom: none;
+  margin-top: var(--spacing);
+}
+.site-footer small {
+  color: var(--color-muted);
+}
+
+.section-title {
+  position: relative;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: calc(var(--spacing) * 0.75);
+  padding-bottom: 0.25rem;
+  color: var(--color-text);
+}
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 2.5rem;
+  height: 3px;
+  background: var(--color-primary);
+}
+
+.charts {
+  display: flex;
+  gap: var(--spacing);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing);
+}
+.chart {
+  flex: 1;
+  min-width: 240px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing);
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  overflow: auto;
+}
+.chart-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: var(--spacing);
+}
+/* —— Scenarios block with side-by-side layout —— */
+.scenarios-container {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: calc(var(--spacing) * 2);
+  margin: calc(var(--spacing) * 2) auto;
+}
+.sidebar,
+.main {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing);
+}
+.main {
+  min-width: 840px;     
+  overflow-x: auto;
+}
+
+/* —— Decision list & details —— */
+.decision-list {
+  display: grid;
+  gap: var(--spacing);
+  margin-bottom: var(--spacing);
+}
+.decision-item {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.decision-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.decision-item + .decision-item {
+  margin-top: var(--spacing);
+}
+.decision-item .label {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+.decision-item hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--spacing) 0;
+}
+.decision-item p {
+  margin-bottom: 0.5rem;
+}
+
+
+/* —— Buttons —— */
+.ga-button-container {
+  text-align: center;
+  margin: calc(var(--spacing) * 1.5) 0;
+}
+.btn {
+  display: inline-block;
+  background: var(--color-primary);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background .3s, transform .2s;
+}
+.btn:hover {
+  background: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+/* —— Tables —— */
+.table,
+table {
+  border-collapse: collapse;
+  margin: var(--spacing) auto;
+  width: auto;
+  max-width: 100%;
+}
+.table th,
+.table td,
+table th,
+table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+.table thead th,
+table thead th {
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+/* —— Table for decision detail section —— */
+.decision-item table {
+  width: 66.666%;
+  max-width: 800px;
+  margin: var(--spacing) auto;
+}
+
+/* —— Responsive —— */
+@media (max-width: 768px) {
+  .charts {
+    flex-direction: column;
+  }
+}
+
+.chart img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.chart.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ensure image is responsive and centered */
+.chart.centered img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}

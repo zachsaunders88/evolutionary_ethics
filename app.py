@@ -2,7 +2,7 @@ from flask import Flask, Response, send_file, render_template, g, redirect, url_
 import sqlite3
 from pathlib import Path
 from utils.pl_parser import parse_scenarios
-from ga_runner import run_evolution_db, get_decisions
+from ga_runner import run_evolution_db
 from utils.plot import plot_fitness_trend, plot_weight_pie, plot_weight_trend
 from io import BytesIO
 import matplotlib.pyplot as plt
@@ -92,14 +92,14 @@ def run_ga_route():
     run_evolution_db(run_id, pop_size=50, ngen=20, cxpb=0.5, mutpb=0.3)
 
     # 3. Save final decisions to the database
-    for rid, scenario, action, justification, score in get_decisions(run_id):
-        db.execute(
-            """
-            INSERT INTO ga_final_decisions
-              (run_id, scenario_code, action, justification, score)
-            VALUES (?, ?, ?, ?, ?)
-            """, (rid, scenario, action, justification, score))
-    db.commit()
+    # for rid, scenario, action, justification, score in get_decisions(run_id):
+    #     db.execute(
+    #         """
+    #         INSERT INTO ga_final_decisions
+    #           (run_id, scenario_code, action, justification, score)
+    #         VALUES (?, ?, ?, ?, ?)
+    #         """, (rid, scenario, action, justification, score))
+    # db.commit()
 
     # After completion, reload scenarios and fetch decisions
     scenes = db.execute(

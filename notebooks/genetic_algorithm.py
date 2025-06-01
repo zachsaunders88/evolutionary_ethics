@@ -53,7 +53,7 @@ GROUND_TRUTH = {
     "dropped_wallet_18": "leave_wallet",
     "dropped_wallet_19": "return_wallet",
     "dropped_wallet_20": "take_wallet",
-    "dropped_wallet_21": "return_wallet",
+    "dropped_wallet_21": "take_wallet",
     "dropped_wallet_22": "leave_wallet",
     "dropped_wallet_23": "take_wallet",
     "dropped_wallet_24": "take_wallet",

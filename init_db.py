@@ -67,7 +67,18 @@ def init_db():
         FOREIGN KEY(run_id) REFERENCES ga_runs(id)
     )
     """)
-
+    
+    c.execute("""
+    CREATE TABLE ga_best_individuals (
+        id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id        INTEGER,
+        accuracy      REAL,
+        util_weight   REAL,
+        deon_weight   REAL,
+        self_weight   REAL,
+        FOREIGN KEY(run_id) REFERENCES ga_runs(id)
+    )
+    """)
 
     # Create rules table
     c.execute("""

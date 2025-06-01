@@ -54,15 +54,19 @@ def plot_weight_pie(run_id: int = None):
         # Get the latest run_id
         c.execute("SELECT MAX(run_id) FROM ga_generation_results")
         row = c.fetchone()
-        run_id = row[0] if row and row[0] is not None else 1
+        if row is None:
+            raise RuntimeError("No GA results in database.")
+        run_id = row[0]
+
+    print("Using run_id:", run_id)  # 调试用
 
     # Query weights of the latest generation
     c.execute(
         """
         SELECT util_weight, deon_weight, self_weight
-        FROM ga_generation_results
+        FROM ga_best_individuals
         WHERE run_id=?
-        ORDER BY generation DESC
+        ORDER BY accuracy DESC
         LIMIT 1
         """,
         (run_id,)

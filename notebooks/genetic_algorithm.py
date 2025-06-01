@@ -125,7 +125,7 @@ def run_prolog_query(weights):
 scenario_data = [
     ("dropped_wallet_1", ("dropped_wallet", True, True, "many_people_around")),
     ("dropped_wallet_2", ("dropped_wallet", True, True, "many_people_around")),
-    ...("dropped_wallet_32", ("dropped_wallet", False, False, "isolated_area")),
+    ("dropped_wallet_32", ("dropped_wallet", False, False, "isolated_area")),
 ]
 
 all_scenarios = {
@@ -179,6 +179,98 @@ toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.1, indpb=0.2)
 toolbox.register("select", tools.selTournament, tournsize=3)
 toolbox.decorate("mate", tools.DeltaPenalty(check_valid, 0.1))
 toolbox.decorate("mutate", tools.DeltaPenalty(check_valid, 0.1))
+
+
+def analyze_error_cases(weights):
+    """
+    Identify which scenarios are failing and why.
+    Returns detailed error analysis.
+    """
+    weights = np.array(weights)
+    weights = weights / np.sum(weights)
+    
+    update_weights_in_file(weights)
+    prolog = Prolog()
+    pl_str = PROLOG_FILE.as_posix()
+    consult_cmd = f"consult('{pl_str}')."
+    list(prolog.query(consult_cmd))
+    
+    error_cases = []
+    correct_cases = []
+    
+    for scenario_name, true_action in GROUND_TRUTH.items():
+        query = f"make_decision({scenario_name}, Action, Justification, Score)."
+        results = list(prolog.query(query))
+        
+        if not results:
+            error_cases.append({
+                'scenario': scenario_name,
+                'error_type': 'no_result',
+                'predicted': None,
+                'expected': true_action,
+                'justification': None,
+                'confidence': None
+            })
+            continue
+            
+        predicted = results[0]["Action"]
+        justification = results[0]["Justification"]
+        confidence = results[0]["Score"]
+        
+        if predicted != true_action:
+            error_cases.append({
+                'scenario': scenario_name,
+                'error_type': 'wrong_prediction',
+                'predicted': predicted,
+                'expected': true_action,
+                'justification': justification,
+                'confidence': confidence
+            })
+        else:
+            correct_cases.append({
+                'scenario': scenario_name,
+                'predicted': predicted,
+                'expected': true_action,
+                'justification': justification,
+                'confidence': confidence
+            })
+    
+    return error_cases, correct_cases
+
+def print_error_analysis(weights):
+    """Print detailed error analysis"""
+    error_cases, correct_cases = analyze_error_cases(weights)
+    
+    print(f"\n=== ERROR ANALYSIS ===")
+    print(f"Total Scenarios: {len(GROUND_TRUTH)}")
+    print(f"Correct: {len(correct_cases)} ({len(correct_cases)/len(GROUND_TRUTH)*100:.1f}%)")
+    print(f"Errors: {len(error_cases)} ({len(error_cases)/len(GROUND_TRUTH)*100:.1f}%)")
+    
+    if error_cases:
+        print(f"\n=== FAILING SCENARIOS ===")
+        for i, error in enumerate(error_cases, 1):
+            print(f"{i}. Scenario: {error['scenario']}")
+            print(f"   Expected: {error['expected']}")
+            print(f"   Predicted: {error['predicted']}")
+            print(f"   Justification: {error['justification']}")
+            print(f"   Confidence: {error['confidence']}")
+            print()
+    
+    error_patterns = {}
+    for error in error_cases:
+        pred = error['predicted']
+        exp = error['expected']
+        pattern = f"{exp} → {pred}"
+        if pattern not in error_patterns:
+            error_patterns[pattern] = []
+        error_patterns[pattern].append(error['scenario'])
+    
+    if error_patterns:
+        print(f"=== ERROR PATTERNS ===")
+        for pattern, scenarios in error_patterns.items():
+            print(f"{pattern}: {len(scenarios)} cases")
+            print(f"  Scenarios: {', '.join(scenarios)}")
+            print()
 
 
 def main():
@@ -240,13 +332,15 @@ def main():
     print(f"Accuracy: {best_ind.fitness.values[0]:.3f}")
     Best_results = [(best_ind.fitness.values[0], best_ind[0], best_ind[1], best_ind[2])]
 
+    print_error_analysis(best_ind)
+
     final_decisions = []
-    for scenario in all_scenarios:
-        action, justification, score = predict_action(scenario, best_ind)
-        correct = GROUND_TRUTH.get(scenario)
-        scenario_struct_result = list(prolog.query(f"scenario({scenario}, S)"))
+    for scenario_name in GROUND_TRUTH.keys():
+        action, justification, score = predict_action(scenario_name, best_ind)
+        correct = GROUND_TRUTH.get(scenario_name)
+        scenario_struct_result = list(prolog.query(f"scenario({scenario_name}, S)"))
         if not scenario_struct_result:
-            print(f"Scenario: {scenario} --- No scenario struct found")
+            print(f"Scenario: {scenario_name} --- No scenario struct found")
             continue
         scenario_struct = scenario_struct_result[0]["S"]
         rules_result = list(
@@ -256,10 +350,10 @@ def main():
 
         match = action == correct
         print(
-            f"Scenario: {scenario} --- Predicted: {action}, justification: {justification}, score: {score}, Ground Truth: {correct}, Match: {'✅' if match else '❌'}{match}"
+            f"Scenario: {scenario_name} --- Predicted: {action}, justification: {justification}, score: {score}, Ground Truth: {correct}, Match: {'✅' if match else '❌'}"
         )
 
-        final_decisions.append((scenario, action, justification, score))
+        final_decisions.append((scenario_name, action, justification, score))
 
     return final_decisions, Gen_results, Best_results
 

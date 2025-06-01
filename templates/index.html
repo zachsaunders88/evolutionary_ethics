@@ -47,6 +47,11 @@
       <button type="submit" class="btn">Run the genetic algorithm</button>
     </form>
   </div>
+  <script>
+    document.querySelector('.ga-button-container form').addEventListener('submit', function(e) {
+      alert('The genetic algorithm is running. Please wait...');
+    });
+  </script>
 
   {% if run_id %}
 

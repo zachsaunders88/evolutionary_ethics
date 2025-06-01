@@ -125,6 +125,35 @@ def run_prolog_query(weights):
 scenario_data = [
     ("dropped_wallet_1", ("dropped_wallet", True, True, "many_people_around")),
     ("dropped_wallet_2", ("dropped_wallet", True, True, "many_people_around")),
+    ("dropped_wallet_3", ("dropped_wallet", True, True, "many_people_around")),
+    ("dropped_wallet_4", ("dropped_wallet", True, True, "many_people_around")),
+    ("dropped_wallet_5", ("dropped_wallet", True, True, "isolated_area")),
+    ("dropped_wallet_6", ("dropped_wallet", True, True, "isolated_area")),
+    ("dropped_wallet_7", ("dropped_wallet", True, True, "isolated_area")),
+    ("dropped_wallet_8", ("dropped_wallet", True, True, "isolated_area")),
+    ("dropped_wallet_9", ("dropped_wallet", True, False, "many_people_around")),
+    ("dropped_wallet_10", ("dropped_wallet", True, False, "many_people_around")),
+    ("dropped_wallet_11", ("dropped_wallet", True, False, "many_people_around")),
+    ("dropped_wallet_12", ("dropped_wallet", True, False, "many_people_around")),
+    ("dropped_wallet_13", ("dropped_wallet", True, False, "isolated_area")),
+    ("dropped_wallet_14", ("dropped_wallet", True, False, "isolated_area")),
+    ("dropped_wallet_15", ("dropped_wallet", True, False, "isolated_area")),
+    ("dropped_wallet_16", ("dropped_wallet", True, False, "isolated_area")),
+    ("dropped_wallet_17", ("dropped_wallet", False, True, "many_people_around")),
+    ("dropped_wallet_18", ("dropped_wallet", False, True, "many_people_around")),
+    ("dropped_wallet_19", ("dropped_wallet", False, True, "many_people_around")),
+    ("dropped_wallet_20", ("dropped_wallet", False, True, "many_people_around")),
+    ("dropped_wallet_21", ("dropped_wallet", False, True, "isolated_area")),
+    ("dropped_wallet_22", ("dropped_wallet", False, True, "isolated_area")),
+    ("dropped_wallet_23", ("dropped_wallet", False, True, "isolated_area")),
+    ("dropped_wallet_24", ("dropped_wallet", False, True, "isolated_area")),
+    ("dropped_wallet_25", ("dropped_wallet", False, False, "many_people_around")),
+    ("dropped_wallet_26", ("dropped_wallet", False, False, "many_people_around")),
+    ("dropped_wallet_27", ("dropped_wallet", False, False, "many_people_around")),
+    ("dropped_wallet_28", ("dropped_wallet", False, False, "many_people_around")),
+    ("dropped_wallet_29", ("dropped_wallet", False, False, "isolated_area")),
+    ("dropped_wallet_30", ("dropped_wallet", False, False, "isolated_area")),
+    ("dropped_wallet_31", ("dropped_wallet", False, False, "isolated_area")),
     ("dropped_wallet_32", ("dropped_wallet", False, False, "isolated_area")),
 ]
 
@@ -275,7 +304,7 @@ def print_error_analysis(weights):
 
 def main():
     random.seed(42)
-    population = toolbox.population(n=500)
+    population = toolbox.population(n=100)
     NGEN = 50
     CXPB = 0.7
     MUTPB = 0.2

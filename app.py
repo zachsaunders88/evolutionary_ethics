@@ -14,7 +14,7 @@ PL_PATH = (
     / 'evolutionary_ethics'
     / 'symbolic_reasoning_sys'
     / 'expanded versions'
-    / 'ethics_engine_expanded_32.pl'
+    / 'ethics_engine_expanded_64.pl'
 )
 
 last_mtime = None
@@ -51,9 +51,12 @@ def refresh_scenarios_if_needed():
         db.executemany(
             """
             INSERT INTO scenarios
-              (code, owner_nearby, valuable, environment, legal_context)
-            VALUES (?, ?, ?, ?, ?)
+              (code, owner_nearby, valuable, environment, legal_context, OwnerTraceability)
+            VALUES (?, ?, ?, ?, ?, ?)
             """, scenes)
+    #     print(f"DEBUG → Inserted {len(scenes)} rows into scenarios.")
+    # else:
+    #     print("DEBUG → No scenarios to insert (parsed list is empty).")
         db.commit()
 
 @app.before_request
@@ -103,10 +106,10 @@ def run_ga_route():
 
     # After completion, reload scenarios and fetch decisions
     scenes = db.execute(
-        "SELECT code, owner_nearby, valuable, environment, legal_context FROM scenarios"
+        "SELECT code, owner_nearby, valuable, environment, legal_context, OwnerTraceability FROM scenarios"
     ).fetchall()
     decisions = db.execute(
-        "SELECT scenario_code AS scenario, action, justification, score"
+        "SELECT scenario_code AS scenario, action, justification, score, match"
         " FROM ga_final_decisions WHERE run_id=?",
         (run_id,)
     ).fetchall()

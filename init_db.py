@@ -29,7 +29,8 @@ def init_db():
         owner_nearby    INTEGER NOT NULL,
         valuable        INTEGER NOT NULL,
         environment     TEXT    NOT NULL,
-        legal_context   TEXT    NOT NULL
+        legal_context   TEXT    NOT NULL,
+        OwnerTraceability INTEGER NOT NULL DEFAULT 0
     );
     """)
 
@@ -64,6 +65,7 @@ def init_db():
         action        TEXT,
         justification TEXT,
         score         REAL,
+        match         INTEGER DEFAULT 0,
         FOREIGN KEY(run_id) REFERENCES ga_runs(id)
     )
     """)

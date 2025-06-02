@@ -120,13 +120,13 @@ def run_evolution_db(run_id, pop_size=POP_SIZE, ngen=NGEN,
     # Unpack the four values from final_decisions
     # Each entry in final_decisions: (scenario, action, justification, score)
     # If you want to process or log them individually, you can do so here
-    for scenario, action, justification, score in final_decisions:
+    for scenario, action, justification, score, match in final_decisions:
         c.execute(
             """
             INSERT INTO ga_final_decisions
-                (run_id, scenario_code, action, justification, score)
-            VALUES (?, ?, ?, ?, ?)
-            """, (run_id, scenario, action, justification, score))
+                (run_id, scenario_code, action, justification, score, match)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """, (run_id, scenario, action, justification, score, match))
 
     conn.commit()
 

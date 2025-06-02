@@ -8,12 +8,13 @@
 
       <aside class="sidebar">
         <div class="section-title">Regarding scene Settings</div>
-        <p>Here are 32 scenarios of "picking up wallets" defined in the system. Each scene consists of the following dimensions:</p>
+        <p>Here are 64 scenarios of "picking up wallets" defined in the system. Each scene consists of the following dimensions:</p>
         <ul>
           <li>The owner is nearby/not nearby</li>
           <li>The item is valuable/ordinary</li>
           <li>Environment (Dense vs. Remote)</li>
-          <li>Legal background (With/without repayment obligation)</li>
+          <li>Legal background (Unpaid repayment obligation/Monitored by CCTV/Publicized law/Unclear law)</li>
+          <li>Owner traceability (Owner traceable/Owner not traceable)</li>
         </ul>
       </aside>
 
@@ -22,7 +23,7 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Code</th><th>Owner?</th><th>Valuable?</th><th>Environment</th><th>Legal</th>
+              <th>Code</th><th>Owner?</th><th>Valuable?</th><th>Environment</th><th>Legal</th><th>Is Owner Traceable?</th>
             </tr>
           </thead>
           <tbody>
@@ -33,6 +34,7 @@
               <td>{{ 'Valuable' if scene.valuable else 'Not valuable' }}</td>
               <td>{{ scene.environment.replace('_',' ')|title }}</td>
               <td>{{ scene.legal_context.replace('_',' ')|title }}</td>
+              <td>{{ 'Owner Traceable' if scene['OwnerTraceability'] else 'Owner not Traceable' }}</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -81,6 +83,17 @@
         <p><span class="label">Action:</span> <span class="value">{{ d.action }}</span></p>
         <p><span class="label">Justification:</span> <span class="value">{{ d.justification }}</span></p>
         <p><span class="label">Score:</span> <span class="value">{{ "%.3f"|format(d.score) }}</span></p>
+        <p><span class="label">Match:</span>
+          <span class="value">
+            {% if d.match == 1 %}
+              Consistent with the result of human choice
+            {% elif d.match == 0 %}
+              Inconsistent with the result of human choice
+            {% else %}
+              {{ d.match }}
+            {% endif %}
+          </span>
+        </p>
       </div>
       {% endfor %}
     </div>

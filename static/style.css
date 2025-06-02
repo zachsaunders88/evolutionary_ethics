@@ -119,7 +119,7 @@ p, ul {
   padding: var(--spacing);
 }
 .main {
-  min-width: 840px;     
+  min-width: 950px;     
   overflow-x: auto;
 }
 

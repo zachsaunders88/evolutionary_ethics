@@ -54,9 +54,6 @@ def refresh_scenarios_if_needed():
               (code, owner_nearby, valuable, environment, legal_context, OwnerTraceability)
             VALUES (?, ?, ?, ?, ?, ?)
             """, scenes)
-    #     print(f"DEBUG → Inserted {len(scenes)} rows into scenarios.")
-    # else:
-    #     print("DEBUG → No scenarios to insert (parsed list is empty).")
         db.commit()
 
 @app.before_request

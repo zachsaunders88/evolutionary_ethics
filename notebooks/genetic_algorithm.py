@@ -25,7 +25,7 @@ PROJECT_ROOT = HERE.parent
 base_dir = PROJECT_ROOT / "symbolic_reasoning_sys" / "expanded versions"
 
 # Step 4: Final .pl file
-PROLOG_FILE = base_dir / "ethics_engine_expanded_32.pl"
+PROLOG_FILE = base_dir / "ethics_engine_expanded_64.pl"
 prolog = Prolog()
 pl_str = PROLOG_FILE.as_posix()
 consult_cmd = f"consult('{pl_str}')."
@@ -34,37 +34,69 @@ list(prolog.query(consult_cmd))
 # GROUND TRUTH
 GROUND_TRUTH = {
     "dropped_wallet_1": "return_wallet",
-    "dropped_wallet_2": "return_wallet",
+    "dropped_wallet_2": "take_wallet",
     "dropped_wallet_3": "return_wallet",
-    "dropped_wallet_4": "return_wallet",
+    "dropped_wallet_4": "leave_wallet",
     "dropped_wallet_5": "return_wallet",
-    "dropped_wallet_6": "return_wallet",
+    "dropped_wallet_6": "leave_wallet",
     "dropped_wallet_7": "return_wallet",
-    "dropped_wallet_8": "return_wallet",
+    "dropped_wallet_8": "take_wallet",
     "dropped_wallet_9": "return_wallet",
-    "dropped_wallet_10": "return_wallet",
+    "dropped_wallet_10": "take_wallet",
     "dropped_wallet_11": "return_wallet",
-    "dropped_wallet_12": "return_wallet",
+    "dropped_wallet_12": "leave_wallet",
     "dropped_wallet_13": "return_wallet",
-    "dropped_wallet_14": "return_wallet",
+    "dropped_wallet_14": "leave_wallet",
     "dropped_wallet_15": "return_wallet",
-    "dropped_wallet_16": "return_wallet",
+    "dropped_wallet_16": "take_wallet",
     "dropped_wallet_17": "return_wallet",
     "dropped_wallet_18": "leave_wallet",
     "dropped_wallet_19": "return_wallet",
-    "dropped_wallet_20": "take_wallet",
-    "dropped_wallet_21": "take_wallet",
+    "dropped_wallet_20": "leave_wallet",
+    "dropped_wallet_21": "return_wallet",
     "dropped_wallet_22": "leave_wallet",
-    "dropped_wallet_23": "take_wallet",
-    "dropped_wallet_24": "take_wallet",
-    "dropped_wallet_25": "leave_wallet",
+    "dropped_wallet_23": "return_wallet",
+    "dropped_wallet_24": "leave_wallet",
+    "dropped_wallet_25": "return_wallet",
     "dropped_wallet_26": "leave_wallet",
-    "dropped_wallet_27": "leave_wallet",
+    "dropped_wallet_27": "return_wallet",
     "dropped_wallet_28": "leave_wallet",
-    "dropped_wallet_29": "leave_wallet",
+    "dropped_wallet_29": "return_wallet",
     "dropped_wallet_30": "leave_wallet",
-    "dropped_wallet_31": "leave_wallet",
+    "dropped_wallet_31": "return_wallet",
     "dropped_wallet_32": "leave_wallet",
+    "dropped_wallet_33": "leave_wallet",
+    "dropped_wallet_34": "take_wallet",
+    "dropped_wallet_35": "leave_wallet",
+    "dropped_wallet_36": "leave_wallet",
+    "dropped_wallet_37": "leave_wallet",
+    "dropped_wallet_38": "leave_wallet",
+    "dropped_wallet_39": "leave_wallet",
+    "dropped_wallet_40": "take_wallet",
+    "dropped_wallet_41": "take_wallet",
+    "dropped_wallet_42": "take_wallet",
+    "dropped_wallet_43": "leave_wallet",
+    "dropped_wallet_44": "leave_wallet",
+    "dropped_wallet_45": "take_wallet",
+    "dropped_wallet_46": "take_wallet",
+    "dropped_wallet_47": "take_wallet",
+    "dropped_wallet_48": "take_wallet",
+    "dropped_wallet_49": "leave_wallet",
+    "dropped_wallet_50": "leave_wallet",
+    "dropped_wallet_51": "leave_wallet",
+    "dropped_wallet_52": "leave_wallet",
+    "dropped_wallet_53": "leave_wallet",
+    "dropped_wallet_54": "leave_wallet",
+    "dropped_wallet_55": "leave_wallet",
+    "dropped_wallet_56": "leave_wallet",
+    "dropped_wallet_57": "leave_wallet",
+    "dropped_wallet_58": "leave_wallet",
+    "dropped_wallet_59": "leave_wallet",
+    "dropped_wallet_60": "leave_wallet",
+    "dropped_wallet_61": "leave_wallet",
+    "dropped_wallet_62": "leave_wallet",
+    "dropped_wallet_63": "leave_wallet",
+    "dropped_wallet_64": "leave_wallet",
 }
 
 
@@ -73,7 +105,7 @@ def update_weights_in_file(weights):
     Overwrite weight/2 facts in the Prolog file with new values.
     weights is a list or array: [w_utilitarian, w_deontological, w_self_interest]
     """
-    with open(PROLOG_FILE, "r") as f:
+    with open(PROLOG_FILE, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
     new_lines = []
@@ -87,7 +119,7 @@ def update_weights_in_file(weights):
         else:
             new_lines.append(line)
 
-    with open(PROLOG_FILE, "w") as f:
+    with open(PROLOG_FILE, "w", encoding="utf-8") as f:
         f.writelines(new_lines)
 
 
@@ -123,43 +155,281 @@ def run_prolog_query(weights):
 
 
 scenario_data = [
-    ("dropped_wallet_1", ("dropped_wallet", True, True, "many_people_around", "none")),
-    ("dropped_wallet_2", ("dropped_wallet", True, True, "many_people_around", "cctv_visible")),
-    ("dropped_wallet_3", ("dropped_wallet", True, True, "many_people_around", "law_posted")),
-    ("dropped_wallet_4", ("dropped_wallet", True, True, "many_people_around", "unclear")),
-    ("dropped_wallet_5", ("dropped_wallet", True, True, "isolated_area", "none")),
-    ("dropped_wallet_6", ("dropped_wallet", True, True, "isolated_area", "cctv_visible")),
-    ("dropped_wallet_7", ("dropped_wallet", True, True, "isolated_area", "law_posted")),
-    ("dropped_wallet_8", ("dropped_wallet", True, True, "isolated_area", "unclear")),
-    ("dropped_wallet_9", ("dropped_wallet", True, False, "many_people_around", "none")),
-    ("dropped_wallet_10", ("dropped_wallet", True, False, "many_people_around", "cctv_visible")),
-    ("dropped_wallet_11", ("dropped_wallet", True, False, "many_people_around", "law_posted")),
-    ("dropped_wallet_12", ("dropped_wallet", True, False, "many_people_around", "unclear")),
-    ("dropped_wallet_13", ("dropped_wallet", True, False, "isolated_area", "none")),
-    ("dropped_wallet_14", ("dropped_wallet", True, False, "isolated_area", "cctv_visible")),
-    ("dropped_wallet_15", ("dropped_wallet", True, False, "isolated_area", "law_posted")),
-    ("dropped_wallet_16", ("dropped_wallet", True, False, "isolated_area", "unclear")),
-    ("dropped_wallet_17", ("dropped_wallet", False, True, "many_people_around", "none")),
-    ("dropped_wallet_18", ("dropped_wallet", False, True, "many_people_around", "cctv_visible")),
-    ("dropped_wallet_19", ("dropped_wallet", False, True, "many_people_around", "law_posted")),
-    ("dropped_wallet_20", ("dropped_wallet", False, True, "many_people_around", "unclear")),
-    ("dropped_wallet_21", ("dropped_wallet", False, True, "isolated_area", "none")),
-    ("dropped_wallet_22", ("dropped_wallet", False, True, "isolated_area", "cctv_visible")),
-    ("dropped_wallet_23", ("dropped_wallet", False, True, "isolated_area", "law_posted")),
-    ("dropped_wallet_24", ("dropped_wallet", False, True, "isolated_area", "unclear")),
-    ("dropped_wallet_25", ("dropped_wallet", False, False, "many_people_around", "none")),
-    ("dropped_wallet_26", ("dropped_wallet", False, False, "many_people_around", "cctv_visible")),
-    ("dropped_wallet_27", ("dropped_wallet", False, False, "many_people_around", "law_posted")),
-    ("dropped_wallet_28", ("dropped_wallet", False, False, "many_people_around", "unclear")),
-    ("dropped_wallet_29", ("dropped_wallet", False, False, "isolated_area", "none")),
-    ("dropped_wallet_30", ("dropped_wallet", False, False, "isolated_area", "cctv_visible")),
-    ("dropped_wallet_31", ("dropped_wallet", False, False, "isolated_area", "law_posted")),
-    ("dropped_wallet_32", ("dropped_wallet", False, False, "isolated_area", "unclear")),
+    (
+        "dropped_wallet_1",
+        ("dropped_wallet", True, True, "many_people_around", "none", True),
+    ),
+    (
+        "dropped_wallet_2",
+        ("dropped_wallet", True, True, "many_people_around", "none", False),
+    ),
+    (
+        "dropped_wallet_3",
+        ("dropped_wallet", True, True, "many_people_around", "cctv_visible", True),
+    ),
+    (
+        "dropped_wallet_4",
+        ("dropped_wallet", True, True, "many_people_around", "cctv_visible", False),
+    ),
+    (
+        "dropped_wallet_5",
+        ("dropped_wallet", True, True, "many_people_around", "law_posted", True),
+    ),
+    (
+        "dropped_wallet_6",
+        ("dropped_wallet", True, True, "many_people_around", "law_posted", False),
+    ),
+    (
+        "dropped_wallet_7",
+        ("dropped_wallet", True, True, "many_people_around", "unclear", True),
+    ),
+    (
+        "dropped_wallet_8",
+        ("dropped_wallet", True, True, "many_people_around", "unclear", False),
+    ),
+    ("dropped_wallet_9", ("dropped_wallet", True, True, "isolated_area", "none", True)),
+    (
+        "dropped_wallet_10",
+        ("dropped_wallet", True, True, "isolated_area", "none", False),
+    ),
+    (
+        "dropped_wallet_11",
+        ("dropped_wallet", True, True, "isolated_area", "cctv_visible", True),
+    ),
+    (
+        "dropped_wallet_12",
+        ("dropped_wallet", True, True, "isolated_area", "cctv_visible", False),
+    ),
+    (
+        "dropped_wallet_13",
+        ("dropped_wallet", True, True, "isolated_area", "law_posted", True),
+    ),
+    (
+        "dropped_wallet_14",
+        ("dropped_wallet", True, True, "isolated_area", "law_posted", False),
+    ),
+    (
+        "dropped_wallet_15",
+        ("dropped_wallet", True, True, "isolated_area", "unclear", True),
+    ),
+    (
+        "dropped_wallet_16",
+        ("dropped_wallet", True, True, "isolated_area", "unclear", False),
+    ),
+    (
+        "dropped_wallet_17",
+        ("dropped_wallet", True, False, "many_people_around", "none", True),
+    ),
+    (
+        "dropped_wallet_18",
+        ("dropped_wallet", True, False, "many_people_around", "none", False),
+    ),
+    (
+        "dropped_wallet_19",
+        ("dropped_wallet", True, False, "many_people_around", "cctv_visible", True),
+    ),
+    (
+        "dropped_wallet_20",
+        ("dropped_wallet", True, False, "many_people_around", "cctv_visible", False),
+    ),
+    (
+        "dropped_wallet_21",
+        ("dropped_wallet", True, False, "many_people_around", "law_posted", True),
+    ),
+    (
+        "dropped_wallet_22",
+        ("dropped_wallet", True, False, "many_people_around", "law_posted", False),
+    ),
+    (
+        "dropped_wallet_23",
+        ("dropped_wallet", True, False, "many_people_around", "unclear", True),
+    ),
+    (
+        "dropped_wallet_24",
+        ("dropped_wallet", True, False, "many_people_around", "unclear", False),
+    ),
+    (
+        "dropped_wallet_25",
+        ("dropped_wallet", True, False, "isolated_area", "none", True),
+    ),
+    (
+        "dropped_wallet_26",
+        ("dropped_wallet", True, False, "isolated_area", "none", False),
+    ),
+    (
+        "dropped_wallet_27",
+        ("dropped_wallet", True, False, "isolated_area", "cctv_visible", True),
+    ),
+    (
+        "dropped_wallet_28",
+        ("dropped_wallet", True, False, "isolated_area", "cctv_visible", False),
+    ),
+    (
+        "dropped_wallet_29",
+        ("dropped_wallet", True, False, "isolated_area", "law_posted", True),
+    ),
+    (
+        "dropped_wallet_30",
+        ("dropped_wallet", True, False, "isolated_area", "law_posted", False),
+    ),
+    (
+        "dropped_wallet_31",
+        ("dropped_wallet", True, False, "isolated_area", "unclear", True),
+    ),
+    (
+        "dropped_wallet_32",
+        ("dropped_wallet", True, False, "isolated_area", "unclear", False),
+    ),
+    (
+        "dropped_wallet_33",
+        ("dropped_wallet", False, True, "many_people_around", "none", True),
+    ),
+    (
+        "dropped_wallet_34",
+        ("dropped_wallet", False, True, "many_people_around", "none", False),
+    ),
+    (
+        "dropped_wallet_35",
+        ("dropped_wallet", False, True, "many_people_around", "cctv_visible", True),
+    ),
+    (
+        "dropped_wallet_36",
+        ("dropped_wallet", False, True, "many_people_around", "cctv_visible", False),
+    ),
+    (
+        "dropped_wallet_37",
+        ("dropped_wallet", False, True, "many_people_around", "law_posted", True),
+    ),
+    (
+        "dropped_wallet_38",
+        ("dropped_wallet", False, True, "many_people_around", "law_posted", False),
+    ),
+    (
+        "dropped_wallet_39",
+        ("dropped_wallet", False, True, "many_people_around", "unclear", True),
+    ),
+    (
+        "dropped_wallet_40",
+        ("dropped_wallet", False, True, "many_people_around", "unclear", False),
+    ),
+    (
+        "dropped_wallet_41",
+        ("dropped_wallet", False, True, "isolated_area", "none", True),
+    ),
+    (
+        "dropped_wallet_42",
+        ("dropped_wallet", False, True, "isolated_area", "none", False),
+    ),
+    (
+        "dropped_wallet_43",
+        ("dropped_wallet", False, True, "isolated_area", "cctv_visible", True),
+    ),
+    (
+        "dropped_wallet_44",
+        ("dropped_wallet", False, True, "isolated_area", "cctv_visible", False),
+    ),
+    (
+        "dropped_wallet_45",
+        ("dropped_wallet", False, True, "isolated_area", "law_posted", True),
+    ),
+    (
+        "dropped_wallet_46",
+        ("dropped_wallet", False, True, "isolated_area", "law_posted", False),
+    ),
+    (
+        "dropped_wallet_47",
+        ("dropped_wallet", False, True, "isolated_area", "unclear", True),
+    ),
+    (
+        "dropped_wallet_48",
+        ("dropped_wallet", False, True, "isolated_area", "unclear", False),
+    ),
+    (
+        "dropped_wallet_49",
+        ("dropped_wallet", False, False, "many_people_around", "none", True),
+    ),
+    (
+        "dropped_wallet_50",
+        ("dropped_wallet", False, False, "many_people_around", "none", False),
+    ),
+    (
+        "dropped_wallet_51",
+        ("dropped_wallet", False, False, "many_people_around", "cctv_visible", True),
+    ),
+    (
+        "dropped_wallet_52",
+        ("dropped_wallet", False, False, "many_people_around", "cctv_visible", False),
+    ),
+    (
+        "dropped_wallet_53",
+        ("dropped_wallet", False, False, "many_people_around", "law_posted", True),
+    ),
+    (
+        "dropped_wallet_54",
+        ("dropped_wallet", False, False, "many_people_around", "law_posted", False),
+    ),
+    (
+        "dropped_wallet_55",
+        ("dropped_wallet", False, False, "many_people_around", "unclear", True),
+    ),
+    (
+        "dropped_wallet_56",
+        ("dropped_wallet", False, False, "many_people_around", "unclear", False),
+    ),
+    (
+        "dropped_wallet_57",
+        ("dropped_wallet", False, False, "isolated_area", "none", True),
+    ),
+    (
+        "dropped_wallet_58",
+        ("dropped_wallet", False, False, "isolated_area", "none", False),
+    ),
+    (
+        "dropped_wallet_59",
+        ("dropped_wallet", False, False, "isolated_area", "cctv_visible", True),
+    ),
+    (
+        "dropped_wallet_60",
+        ("dropped_wallet", False, False, "isolated_area", "cctv_visible", False),
+    ),
+    (
+        "dropped_wallet_61",
+        ("dropped_wallet", False, False, "isolated_area", "law_posted", True),
+    ),
+    (
+        "dropped_wallet_62",
+        ("dropped_wallet", False, False, "isolated_area", "law_posted", False),
+    ),
+    (
+        "dropped_wallet_63",
+        ("dropped_wallet", False, False, "isolated_area", "unclear", True),
+    ),
+    (
+        "dropped_wallet_64",
+        ("dropped_wallet", False, False, "isolated_area", "unclear", False),
+    ),
 ]
 
+
 all_scenarios = {
-    name: (event, (owner_nearby, contents_valuable, environment, legal_context))
-    for name, (event, owner_nearby, contents_valuable, environment, legal_context) in scenario_data
+    name: (
+        event,
+        (
+            owner_nearby,
+            contents_valuable,
+            environment,
+            legal_context,
+            owner_traceability,
+        ),
+    )
+    for name, (
+        event,
+        owner_nearby,
+        contents_valuable,
+        environment,
+        legal_context,
+        owner_traceability,
+    ) in scenario_data
 }
 
 
@@ -217,64 +487,73 @@ def analyze_error_cases(weights):
     """
     weights = np.array(weights)
     weights = weights / np.sum(weights)
-    
+
     update_weights_in_file(weights)
     prolog = Prolog()
     pl_str = PROLOG_FILE.as_posix()
     consult_cmd = f"consult('{pl_str}')."
     list(prolog.query(consult_cmd))
-    
+
     error_cases = []
     correct_cases = []
-    
+
     for scenario_name, true_action in GROUND_TRUTH.items():
         query = f"make_decision({scenario_name}, Action, Justification, Score)."
         results = list(prolog.query(query))
-        
+
         if not results:
-            error_cases.append({
-                'scenario': scenario_name,
-                'error_type': 'no_result',
-                'predicted': None,
-                'expected': true_action,
-                'justification': None,
-                'confidence': None
-            })
+            error_cases.append(
+                {
+                    "scenario": scenario_name,
+                    "error_type": "no_result",
+                    "predicted": None,
+                    "expected": true_action,
+                    "justification": None,
+                    "confidence": None,
+                }
+            )
             continue
-            
+
         predicted = results[0]["Action"]
         justification = results[0]["Justification"]
         confidence = results[0]["Score"]
-        
+
         if predicted != true_action:
-            error_cases.append({
-                'scenario': scenario_name,
-                'error_type': 'wrong_prediction',
-                'predicted': predicted,
-                'expected': true_action,
-                'justification': justification,
-                'confidence': confidence
-            })
+            error_cases.append(
+                {
+                    "scenario": scenario_name,
+                    "error_type": "wrong_prediction",
+                    "predicted": predicted,
+                    "expected": true_action,
+                    "justification": justification,
+                    "confidence": confidence,
+                }
+            )
         else:
-            correct_cases.append({
-                'scenario': scenario_name,
-                'predicted': predicted,
-                'expected': true_action,
-                'justification': justification,
-                'confidence': confidence
-            })
-    
+            correct_cases.append(
+                {
+                    "scenario": scenario_name,
+                    "predicted": predicted,
+                    "expected": true_action,
+                    "justification": justification,
+                    "confidence": confidence,
+                }
+            )
+
     return error_cases, correct_cases
+
 
 def print_error_analysis(weights):
     """Print detailed error analysis"""
     error_cases, correct_cases = analyze_error_cases(weights)
-    
+
     print(f"\n=== ERROR ANALYSIS ===")
     print(f"Total Scenarios: {len(GROUND_TRUTH)}")
-    print(f"Correct: {len(correct_cases)} ({len(correct_cases)/len(GROUND_TRUTH)*100:.1f}%)")
+    print(
+        f"Correct: {len(correct_cases)} ({len(correct_cases)/len(GROUND_TRUTH)*100:.1f}%)"
+    )
     print(f"Errors: {len(error_cases)} ({len(error_cases)/len(GROUND_TRUTH)*100:.1f}%)")
-    
+
     if error_cases:
         print(f"\n=== FAILING SCENARIOS ===")
         for i, error in enumerate(error_cases, 1):
@@ -284,16 +563,16 @@ def print_error_analysis(weights):
             print(f"   Justification: {error['justification']}")
             print(f"   Confidence: {error['confidence']}")
             print()
-    
+
     error_patterns = {}
     for error in error_cases:
-        pred = error['predicted']
-        exp = error['expected']
+        pred = error["predicted"]
+        exp = error["expected"]
         pattern = f"{exp} → {pred}"
         if pattern not in error_patterns:
             error_patterns[pattern] = []
-        error_patterns[pattern].append(error['scenario'])
-    
+        error_patterns[pattern].append(error["scenario"])
+
     if error_patterns:
         print(f"=== ERROR PATTERNS ===")
         for pattern, scenarios in error_patterns.items():
@@ -304,7 +583,7 @@ def print_error_analysis(weights):
 
 def main():
     random.seed(42)
-    population = toolbox.population(n=100)
+    population = toolbox.population(n=20)
     NGEN = 50
     CXPB = 0.7
     MUTPB = 0.2
@@ -335,13 +614,17 @@ def main():
             ind.fitness.values = fit
 
         population[:] = offspring
+        print(f"\nGeneration {gen} - Population Weights:")
+        for i, ind in enumerate(population):
+            normalised = np.round(np.array(ind) / np.sum(ind), 3)
+            print(f"  Ind {i}: {normalised} (Fitness: {ind.fitness.values[0]:.3f})")
         top = tools.selBest(population, 1)[0]
-        normalized_weights = np.round(np.array(top) / np.sum(top), 3)
+        normalised_weights = np.round(np.array(top) / np.sum(top), 3)
         print(
-            f"Gen {gen}: Best Accuracy = {top.fitness.values[0]:.2f} | Weights = {normalized_weights}"
+            f"Gen {gen}: Best Accuracy = {top.fitness.values[0]:.2f} | Weights = {normalised_weights}"
         )
         utilitarian_weight, deontological_weight, self_interest_weight = (
-            normalized_weights
+            normalised_weights
         )
         Gen_results.append(
             (
@@ -355,8 +638,9 @@ def main():
 
     best_ind = tools.selBest(population, 1)[0]
     print("\nBest individual:")
+    normalised_weights = np.round(np.array(best_ind) / np.sum(best_ind), 3)
     print(
-        f"Weights: Utilitarian={best_ind[0]:.3f}, Deontological={best_ind[1]:.3f}, Self-interest={best_ind[2]:.3f}"
+        f"Weights: Utilitarian={normalised_weights[0]:.3f}, Deontological={normalised_weights[1]:.3f}, Self-interest={normalised_weights[2]:.3f}"
     )
     print(f"Accuracy: {best_ind.fitness.values[0]:.3f}")
     Best_results = [(best_ind.fitness.values[0], best_ind[0], best_ind[1], best_ind[2])]

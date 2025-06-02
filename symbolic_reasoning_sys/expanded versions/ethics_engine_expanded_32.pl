@@ -28,6 +28,9 @@ utilitarian_rule(scenario(dropped_wallet, false, true, isolated_area, none), lea
 utilitarian_rule(scenario(dropped_wallet, false, true, isolated_area, unclear), leave_wallet).
 % Low-value items offer no utility gain; ignoring conserves resources
 utilitarian_rule(scenario(dropped_wallet, _, false, _, _), leave_wallet).
+% Surveillance encourages return despite isolation; reinforces prosocial norm under observation
+utilitarian_rule(scenario(dropped_wallet, false, true, isolated_area, cctv_visible), return_wallet).
+
 
 % DEONTOLOGICAL RULES: follow moral duties regardless of consequences
 
@@ -47,6 +50,8 @@ deontological_rule(scenario(dropped_wallet, true, false, isolated_area, _), leav
 deontological_rule(scenario(dropped_wallet, false, true, _, law_posted), return_wallet).
 % Unclear rules evoke caution; non-interference is safest duty
 deontological_rule(scenario(dropped_wallet, _, _, _, unclear), leave_wallet).
+% Law not posted, but surveillance implies responsibility; reporting to authority suffices
+deontological_rule(scenario(dropped_wallet, false, true, isolated_area, cctv_visible), return_wallet).
 
 % SELF-INTEREST RULES: model personal gain-oriented behavior
 
@@ -74,6 +79,8 @@ self_interest_rule(scenario(dropped_wallet, true, false, many_people_around, _),
 self_interest_rule(scenario(dropped_wallet, false, false, many_people_around, _), leave_wallet).
 % Private return provides risk mitigation and internal satisfaction
 self_interest_rule(scenario(dropped_wallet, true, true, isolated_area, _), return_wallet).
+% Surveillance reduces net gain; risk outweighs personal benefit
+self_interest_rule(scenario(dropped_wallet, false, true, isolated_area, cctv_visible), leave_wallet).
 
 % == SCENARIO MODULE ==
 

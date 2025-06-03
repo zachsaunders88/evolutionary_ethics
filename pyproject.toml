@@ -11,6 +11,9 @@ pyswip = "^0.3.2"
 ipykernel = "^6.29.5"
 numpy = "^2.2.6"
 deap = "^1.4.3"
+flask = "^3.1.1"
+matplotlib = "^3.10.3"
+chardet = "^5.2.0"
 
 
 [build-system]
